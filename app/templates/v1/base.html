@@ -1,0 +1,87 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="{{ url_for("static",filename="v1/search.css" ) }}">
+ <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+{% block scipt %}{% endblock %}
+</head>
+<div style="height: 20px"></div>
+
+<div class="container-fluid">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-4">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="{{ url_for("v1.index") }}">Home</a></li>
+        </ul>
+    </div>
+    <div class="col-lg-6"></div>
+</div>
+<div style="height: 80px"></div>
+
+<div class="container-fluid">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-4">
+        <form role="form" action="{{ url_for("v1.search",search="search") }}" method="get" autocomplete="off">
+            <div class="input-group">
+                <input type="text" class="form-control input-lg" placeholder="查找..." id="search" name="search">
+                <span class="input-group-btn">
+        <input type="submit" class="btn btn-default input-lg" value="search"></input>
+      </span>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-6"></div>
+</div>
+
+
+<div class="container" style="margin-top: 10px"></div>
+<div class="col-lg-2"></div>
+<div class="col-lg-8">
+{#    <dl id="time">#}
+{#        <dt class="pull-left"><span>时&nbsp;&nbsp;&nbsp;间</span></dt>#}
+{#        <dd class="pull-left" style="margin-left:3%"><a><span>不限</span></a></dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox" name="time" value="2019"><span>2019</span>#}
+{#        </dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox"><span>2018</span></dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox"><span>2017</span></dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox"><span>2017以前</span></dd>#}
+{#    </dl>#}
+{#    <div class="clearfix"></div>#}
+{#    <dl id="stylename">#}
+{#        <dt class="pull-left"><span>类&nbsp;&nbsp;&nbsp;别</span></dt>#}
+{#        <dd class="pull-left" style="margin-left:3%"><a><span>不限</span></a></dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox" name="stylename"#}
+{#                                                              value="通知"><span>通知</span></dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox" name="stylename"#}
+{#                                                              value="意见"><span>意见</span></dd>#}
+{#        <dd class="pull-left" style="margin-left:1.5%"><input type="checkbox" name="stylename"#}
+{#                                                              value="其他"><span>其他</span></dd>#}
+{#    </dl>#}
+{#    <hr style="height:1px;border:none;border-top:1px solid #555555;clear:left;"/>#}
+</div>
+<div style="clear: both"></div>
+{% block page_content %}
+{% endblock %}
+
+<div class="col-lg-2"></div>
+<div class="container-fluid">
+
+</div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Template</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static',filename='v1/index.css') }}">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='v1/bootstrap3-typeahead.min.js') }}"></script>
+</head>
+<body>
+{#<div style="height: 200px;"></div>#}
+<div class="container" style="margin-top: 200px;">
+    <div style="text-align:center"><h1>Search</h1></div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <form role="form" action="{{ url_for("v1.search",search="search") }}" method="get" autocomplete="off">
+
+                <div class="input-group">
+                    <input type="text" class="form-control input-lg" placeholder="查找..." id="search" name="search">
+                    <span class="input-group-btn">
+        <input type="submit" class="btn btn-default input-lg" value="search">
+      </span>
+                </div>
+                <div class="hide_div form-control input-lg"
+                     style="height: auto;position: absolute;border: solid 1px #CCCCCC;display: none;width: 292.44px"></div>
+            </form>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+<div style="height: 10px;"></div>
+<div class="row">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">历史搜索
+        <div id="history">
+            {% if items %}
+                {% for item in items %}
+                    <div style="height: 5px"></div>
+                    <div><a href={{ url_for("v1.search",search=item) }}><span>{{ item }}</span></a></div>
+                {% endfor %}
+                <div><a id="clean">清除历史搜索</a></div>
+            {% else %}
+                <div></div>
+            {% endif %}
+        </div>
+
+    </div>
+    {#    <div class="col-lg-2">猜您喜欢<a hef="{{ url_for("index") }}" style="float:right;"><span#}
+    {#            class="glyphicon glyphicon-refresh"></span><span>换一换</span></a>#}
+    {#    </div>#}
+    <div class="col-lg-2"></div>
+</div>
+</div>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="http://libs.baidu.com/jqueryui/1.8.22/jquery-ui.min.js"></script>
+<script src="{{ url_for('static',filename='v1/index.js') }}"></script>
+<script>
+    $("#clean").click(function (e) {
+        $("#history").css("display", "None")
+        $.ajax({
+            url: "/clean",
+            type: "get",
+        })
+
+    })
+</script>
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        $("#search").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "autocomplete",
+                    type: "post",
+                    data: {localName: $("#search").val()},
+                    dataType: "json",
+                    success: function (jsonData) {
+                        var data = eval(jsonData).data;
+                        var context = "";
+                        response($.map( data,function (item) {
+                                context = context + "<div class='append_div'><span class='append_span'>"+item+"</span><div>";
+
+                        }));
+                        {#response( $.map( data, function( item ) {#}
+                        {#    console.log(item)#}
+                        {#	/*获取后台匹配到的返回值*/#}
+                        {#var name = item.localName+"";#}
+                        {#console.log(name)#}
+                        {#var neId = item.managedElement+"";#}
+                        {#	/*拼接补全div内容  */#}
+                        {#	context = context + "<li>"+item+"</li>";#}
+                        if (context != "") {
+                            {#context = "<ul style='list-style-type:none;margin:0;padding:0'>" + context + "</ul>"#}
+                            $(".hide_div").html("");  /* 清空上一次补全div中的内容 */
+                            $(".hide_div").append(context);
+                            $(".hide_div").show();
+                        } else {
+                            $(".hide_div").hide();
+                        }
+                    }
+                });
+            }
+
+        }).result(function (event, item) {
+                console.log("123")
+            $("#search").val("abc");
+             $(".hide_div").hide();
+             });
+
+         /*鼠标点击其他地方，补全的div消失  */
+         $("body").mouseup(function(){
+             $(".hide_div").hide();
+         });
+         
+     
+     /*该方法是再拼接div内容时加上的，即鼠标选中的时候，input框输入选中值  */
+     function select(name){
+    console.log(name)
+    event.stopPropagation();
+                          $("#search").val(name);
+             $(".hide_div").hide();
+     }
+         
+         
+     })
+     
+     
+</script>
+
+
+</body>
+</html>

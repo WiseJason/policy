@@ -1,0 +1,125 @@
+{% extends "v1/base.html" %}
+{% block title %}Demo{% endblock %}
+{% block page_content %}
+    <div class="container">
+        <div class="col-lg-8">
+            {% if items %}
+                <ul>
+                    {% if page_num==1 %}
+                        {% set times=items[0].get("time_list") %}
+                        <table class="table">
+                            <tr>
+                                <td>enddate</td>
+                            </tr>
+
+                            {% for time in times %}
+                                <tr>
+                                    {% if loop.index0 < 9 %}
+                                        <td><span>{{ time }}</span></td>
+
+                                    {% else %}
+                                        {% set nu = loop.index0/10 | float %}
+                                        {% set new=nu |int %}
+                                        {% set new_s= new| string %}
+                                        {% set nu2 = loop.index0/10-1.0 | float %}
+                                        {% set new2=nu2 |int %}
+                                        {% set new_s2= new2| string %}
+                                        {% if loop.index0 |ten_multiple %}
+                                            {% set href_1 = "#demo" + new_s %}
+                                            {% set href_2 = "demo" + new_s2 %}
+                                            <td id={{ href_2 }} class="collapse"><span>{{ time }}</span>
+                                                <a href="{{ href_1 }}" class="btn btn_small"
+                                                   data-toggle="collapse"
+                                                   style="float:right;"><span
+                                                        class="glyphicon glyphicon-plus" ></span></a></td>
+                                        {% endif %}
+                                        {% if loop.index0 == 9 %}
+                                            <td><span>{{ time }}</span>
+                                                {% set href_2 = "#demo" + "1" %}
+                                                <a href="{{ href_2 }}" class="btn btn-small" data-toggle="collapse"
+                                                   style="float:right;"><span
+                                                        class="glyphicon glyphicon-plus" style="font-size:8px"></span></a></td>
+                                        {% else %}
+                                            {% if new == 0 %}
+                                                <td id="demo" class="collapse">
+                                                    <span>{{ time }}</span>
+                                                    {% elif not loop.index0 |ten_multiple %}
+                                                    {% set td_id = "demo" + new_s %}
+                                                <td id="{{ td_id }}" class="collapse">
+                                                    <span>{{ time }}</span></td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                    {% endif %}
+                    {% set items=items[1:-1] %}
+                    {% for item in items %}
+                        <div style="margin-top:8px"></div>
+                        <li>
+                            <a href="{{ url_for("v1.detail",id=item.get("id")) }}"><span>{{ item.get("title") | safe }}</span></a>
+                        </li>
+                        <div style="height: 5px"></div>
+                        <li style="white-space: nowrap;overflow:hidden; text-overflow:ellipsis;">文章详情：<a class="detail"
+                                href="{{ url_for("v1.detail",id=item.get("id")) }}">{{ item.get("summary") | safe }}</a>
+                        </li>
+                        <hr style="border:none;border-top:1px solid #555555;clear:left;"/>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h2>未搜到...</h2>
+            {% endif %}
+            {{ pagination.links }}
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+    <script>
+    $(function () {
+        $("a").click(function (e) {
+            var clsname=$(this).find("span").attr("class")
+            console.log(clsname)
+            if(clsname==="glyphicon glyphicon-plus"){
+              $(this).find("span").removeAttr("class")
+              $(this).find("span").addClass("glyphicon glyphicon-minus")
+            }
+            else{
+                $(this).find("span").removeAttr("class")
+                $(this).find("span").addClass("glyphicon glyphicon-plus")
+            }
+        })
+
+    })
+
+    </script>
+
+     <script>
+        $(function () {
+            //鼠标位于 a标签上方时发生 mouseover 事件
+            $(".detail").mouseover(function (e) {
+
+                text=$(this).text()
+                $("body").append("<div id='div_toop'>" + text + "</div>");//将要显示的内容添加到 新建 div标签中 并追加到 body 中
+                $("#div_toop")
+                    .css({
+                        //设置 div 内容位置
+                        "top": (e.pageY + 10) + "px",
+                        "position": "absolute",//添加绝对位置
+                        "left": (e.pageX + 20) + "px"
+                    }).show("fast");// show(spe.ed,callback) speed: xian'shi'su'du
+            }).mouseout(function () { //鼠标指针从 a标签 上离开时 发生mouseout 事件
+
+                $("#div_toop").remove();//移除对象
+            }).mousemove(function (e) { //鼠标指针在 a标签 中移动时 发生mouseout 事件
+                $("#div_toop")
+                    .css({
+                        //设置 div 内容位置
+                        "top": (e.pageY + 10) + "px",
+                        "position": "absolute",//添加绝对位置
+                        "left": (e.pageX + 20) + "px"
+                    });
+            });
+        })
+     </script>
+{% endblock %}

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ item.get("_source").get("title") }}</title>
+</head>
+<body>
+<h1>{{ item.get("_source").get("title") }}</h1>
+<div>{{ item.get("_source").get("content") |safe}}</div>
+</body>
+</html>
